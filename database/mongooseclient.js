@@ -24,4 +24,16 @@ client.createUser = function(data) {
   return true;
 }
 
+client.findUserForLogin = function(data) {
+  console.log("Finding user: "+data.email);
+  status = User.find({ email: data.email }, function(err, user) {
+    if (err) {
+      return false;
+    }
+    console.log("USER FROM CLIENT: " + user);
+    return "success";
+  });
+  return status;
+}
+
 module.exports = client;

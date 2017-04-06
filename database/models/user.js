@@ -20,6 +20,7 @@ var userSchema = new Schema({
 });
 
 userSchema.methods.encrypt = function(password) {
+  this.encrypted = true;
   return password;
 }
 

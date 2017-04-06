@@ -26,3 +26,9 @@ router.post('/api/createaccount', function(req, res, next) {
   //if success, send true
   //if failed, send error
 });
+
+router.post('/api/login', function(req, res, next) {
+  var user = database.findUserForLogin(req.body);
+  console.log("USER: "+user);
+  res.send(user);
+})
