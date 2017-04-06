@@ -8,15 +8,9 @@ var client = {}
 
 client.createUser = function(data) {
   console.log("Creating user...");
-  var newUser = User({
-    name: data.name,
-    email: data.email,
-    password: data.password,
-    encrypted: false,
-    socialnetworks: data.social,
-    birthdate: data.birthdate,
-    creation_date: new Date
-  });
+  var newUser = User(data);
+  newUser.encrypted = false;
+  newUser.creation_date = new Date();
   var error = newUser.validateSync();
   if (error) {
     console.log("ERROR VALIDATING USER: " + newUser.name);
