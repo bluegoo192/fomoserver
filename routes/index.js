@@ -28,7 +28,7 @@ router.post('/api/createaccount', function(req, res, next) {
 });
 
 router.post('/api/login', function(req, res, next) {
-  var user = database.findUserForLogin(req.body);
+  database.findUserForLogin(req.body);
   console.log("USER: "+user);
   res.send(user);
 })
