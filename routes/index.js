@@ -34,9 +34,11 @@ router.post('/api/login', function(req, res, next) {
 });
 
 router.post('/api/createEvent', function(req, res, next) {
-  database.createEvent(req.body, function(data) {
-    res.send(data);
-  });
+  if (req.body.event && req.body.user) {
+    res.send(database.createEvent(req.body.event, req.body.user));
+  } else {
+    res.send(400);
+  }
 });
 
 router.post('/api/getEvents', function(req, res, next) {

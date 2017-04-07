@@ -22,6 +22,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Check content type for api requests
+app.use('/api/', function(req, res, next) {
+  var contype = req.headers['content-type'];
+  if (!contype || contype.indexOf('application/json') !== 0)
+    return res.send(400);
+  next();
+});
+
 app.use('/', index);
 app.use('/users', users);
 
