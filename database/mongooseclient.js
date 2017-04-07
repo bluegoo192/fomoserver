@@ -5,25 +5,30 @@ var Event = require('./models/event.js');
 mongoose.connect('mongodb://eventcreator:eventcreator@ds153400.mlab.com:53400/fomo');
 var client = {}
 
+client.create = function(data, model, name, handler) {
+  var doc = model(data);
+  handler(doc);//run the extra sht
+  var error = doc.validateSync();
+  if (error) {
+    console.log("ERROR VALIDATING "+name+": "+doc._id);
+    return error;
+  }
+  doc.save(function(err) {
+    if (err) throw err;
+    console.log("Successfully created "+name+": "+doc._id);
+  });
+  return true;
+}
+
 client.validateUser = function(user) {
   return user;
 }
 
 client.createUser = function(data) {
-  var newUser = User(data);
-  newUser.encrypted = false;
-  newUser.creation_date = new Date();
-  var error = newUser.validateSync();
-  if (error) {
-    console.log("ERROR VALIDATING USER: " + newUser.name);
-    console.log(error);
-    return error;
-  }
-  newUser.save(function(err) {
-    if (err) throw err;
-    console.log("Successfully created user: "+newUser.name);
+  return this.create(data, User, "user", function(doc) {
+    doc.encrypted = false;
+    doc.creation_date = new Date();
   });
-  return true;
 }
 
 client.findUserForLogin = function(data, handler) {
@@ -36,21 +41,10 @@ client.findUserForLogin = function(data, handler) {
 }
 
 client.createEvent = function(data, user) {
-  console.log("createEvent: "+data);
-  var newEvent = Event(data);
-  newEvent.creator = this.validateUser(user);
-  newEvent.creation_date = new Date();
-  var error = newEvent.validateSync();
-  if (error) {
-    console.log("ERROR VALIDATING EVENT: "+newEvent.name);
-    console.log(error);
-    return error;
-  }
-  newEvent.save(function(err) {
-    if (err) throw err;
-    console.log("Successfully created event: "+newEvent.name);
+  return this.create(data, Event, "event", (doc) => {
+    doc.creator = this.validateUser(user);
+    doc.creation_date = new Date();
   });
-  return true;
 }
 
 client.getEvents = function(user, location, handler) {
