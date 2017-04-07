@@ -31,4 +31,10 @@ router.post('/api/login', function(req, res, next) {
   database.findUserForLogin(req.body, function(user) {
     res.send(user);
   });
+});
+
+router.post('/api/createEvent', function(req, res, next) {
+  database.createEvent(req.body, function(data) {
+    res.send(data);
+  });
 })

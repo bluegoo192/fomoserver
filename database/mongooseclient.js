@@ -2,8 +2,6 @@ var mongoose = require('mongoose');
 var User = require('./models/user.js');
 
 mongoose.connect('mongodb://eventcreator:eventcreator@ds153400.mlab.com:53400/fomo');
-//mongoose.connect('mongodb://reader:reader@ds153400.mlab.com:53400/fomo');
-
 var client = {}
 
 client.createUser = function(data) {
@@ -31,6 +29,11 @@ client.findUserForLogin = function(data, handler) {
     }
     handler(user);
   });
+}
+
+client.createEvent = function(data, handler) {
+  console.log("data: "+data);
+  handler(data);
 }
 
 module.exports = client;

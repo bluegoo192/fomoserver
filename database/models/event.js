@@ -16,6 +16,7 @@ var eventSchema = new Schema({
   description: String,
   rating: Number,
   image_url: String,
+  location: String,
   posts: { type: Array, default: [] }
   //store posts in a separate databse
 });
