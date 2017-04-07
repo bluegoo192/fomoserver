@@ -32,8 +32,13 @@ client.findUserForLogin = function(data, handler) {
 }
 
 client.createEvent = function(data, handler) {
-  console.log("data: "+data);
+  console.log("createEvent: "+data);
   handler(data);
+}
+
+client.getEvents = function(user, location, handler) {
+  console.log("getEvents": + user);
+  handler(user);
 }
 
 module.exports = client;

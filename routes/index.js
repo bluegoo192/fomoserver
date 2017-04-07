@@ -37,4 +37,10 @@ router.post('/api/createEvent', function(req, res, next) {
   database.createEvent(req.body, function(data) {
     res.send(data);
   });
-})
+});
+
+router.post('/api/getEvents', function(req, res, next) {
+  database.getEvents(req.body, req.body, function(data) {
+    res.send(data);
+  })
+});
