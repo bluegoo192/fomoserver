@@ -17,6 +17,7 @@ var eventSchema = new Schema({
   rating: Number,
   image_url: String,
   location: String,
+  last_mod: Date,
   posts: { type: Array, default: [] }
   //store posts in a separate databse
 });
@@ -24,6 +25,12 @@ var eventSchema = new Schema({
 eventSchema.methods.sendInvites = function() {
   console.log("sendInvites stub for "+this.name);
 }
+
+userSchema.pre('save', function(next) {
+  this.last_mod = new Date();
+  next();
+})
+
 
 var Event = mongoose.model('Event', eventSchema);
 
