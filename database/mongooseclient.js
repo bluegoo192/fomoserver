@@ -25,7 +25,6 @@ client.createUser = function(data) {
 }
 
 client.findUserForLogin = function(data, handler) {
-  console.log("Finding user: "+data.email);
   User.find({ email: data.email }, function(err, user) {
     if (err) {
       return false;
