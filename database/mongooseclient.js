@@ -29,7 +29,6 @@ client.findUserForLogin = function(data, handler) {
     if (err) {
       return false;
     }
-    console.log("USER FROM CLIENT: " + user);
     handler(user);
   });
 }
