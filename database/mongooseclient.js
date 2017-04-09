@@ -5,6 +5,8 @@ var Event = require('./models/event.js');
 mongoose.connect('mongodb://eventcreator:eventcreator@ds153400.mlab.com:53400/fomo');
 var client = {}
 
+client.user = User;
+
 client.create = function(data, model, name, handler) {
   var doc = model(data);
   handler(doc);//run the extra sht

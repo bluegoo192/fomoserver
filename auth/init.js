@@ -1,5 +1,6 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const bcrypt = require('bcrypt-nodejs');
 
 var database = require('../database/mongooseclient.js');
 
@@ -11,26 +12,25 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
-const user = {
-  username: 'test-user',
-  password: 'test-password',
-  id: 1
+var isValidPassword = function(user, password) {
+  return bcrypt.compareSync(password, user.password);
 }
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    findUser(username, function (err, user) {
-      if (err) {
-        return done(err)
-      }
+passport.use('login', new LocalStrategy({
+    passReqToCallback: true
+  },
+  function(req, email, password, done) {
+    database.user.findOne({ 'email': email }, function(err, user) {
+      if (err) return done(err);
       if (!user) {
-        return done(null, false)
+        console.log('User not found with email'+email);
+        return done(null, false);
       }
-      if (password !== user.password  ) {
-        return done(null, false)
+      if (!isValidPassword(user, password)) {
+        console.log('Invalid password');
+        return done(null, false);
       }
-      return done(null, user)
-    })
+      return done(null, user);
+    });
   }
 ))
