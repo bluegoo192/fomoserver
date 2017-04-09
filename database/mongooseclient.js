@@ -31,6 +31,12 @@ client.createUser = function(data) {
   });
 }
 
+client.findUserById = function(id, handler) {
+  User.findById(id, function(err, user) {
+    handler(err, user);
+  });
+}
+
 client.findUserForLogin = function(data, handler) {
   User.find({ email: data.email }, function(err, user) {
     if (err) {
