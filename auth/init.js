@@ -15,6 +15,9 @@ passport.deserializeUser(function(id, done) {
 var isValidPassword = function(user, password) {
   return bcrypt.compareSync(password, user.password);
 }
+var createHash = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
 
 function init() {
   passport.use('login', new LocalStrategy({
@@ -35,6 +38,37 @@ function init() {
       });
     }
   ));
+  passport.use('signup', new LocalStrategy(
+    { passReqToCallback: true },
+    function(req, email, password, done) {
+      findOrCreateUser = function() {
+        database.User.findOne({'email':email}, function(err, user) {
+          if (err) {
+            console.log('Error in signup: '+err);
+            return done(err);
+          }
+          if (user) {
+            console.log('User exists already');
+            return done(null, false);
+          } else {
+            var newUser = database.User(req.body);
+            newUser.password = createHash(newUser.password);
+            newUser.encrypted = true;//we are going to encrypt manually for now
+            newUser.creation_date = new Date();
+            newUser.save(function(err) {
+              if (err) {
+                console.log('Error saving user: '+err);
+                throw err;
+              }
+              console.log('Successfully registered user: '+newUser.email);
+              return done(null, newUser);
+            });
+          }
+        });
+      }
+      process.nextTick(findOrCreateUser);
+    })
+  );
 }
 
 module.exports = init

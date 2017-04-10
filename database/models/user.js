@@ -25,7 +25,7 @@ userSchema.methods.encrypt = function(password) {
 }
 
 userSchema.pre('save', function(next) {
-  this.password = this.encrypt(this.password);
+  if (!this.encrypted) this.password = this.encrypt(this.password);
   next();
 })
 
