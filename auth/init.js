@@ -38,10 +38,14 @@ function init() {
       });
     }
   ));
-  passport.use('signup', new LocalStrategy(
-    { passReqToCallback: true },
+  passport.use('signup', new LocalStrategy(function(email, password, done) {
+    console.log("test");
+    return done(null, false);
+  }
+    /*{ passReqToCallback: true },
     function(req, email, password, done) {
       findOrCreateUser = function() {
+        console.log("signing up with "+JSON.stringify(req.body));
         database.User.findOne({'email':email}, function(err, user) {
           if (err) {
             console.log('Error in signup: '+err);
@@ -67,8 +71,10 @@ function init() {
         });
       }
       process.nextTick(findOrCreateUser);
-    })
+    }*/ )
   );
 }
 
-module.exports = init
+init();
+
+module.exports = passport

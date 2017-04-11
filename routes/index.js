@@ -22,7 +22,9 @@ router.post('/api/nearby', function(req, res, next) {
 });
 
 router.post('/api/createaccount', function(req, res, next) {
-  res.send(database.createUser(req.body));
+  var status = database.createUser(req.body);
+  console.log(status);
+  res.send(status);
   //if success, send true
   //if failed, send error
 });
