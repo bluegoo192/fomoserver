@@ -21,9 +21,8 @@ router.post('/api/nearby', function(req, res, next) {
   res.send('stub nearby eventslist\n');
 });
 
-router.post('/api/createaccount', function(req, res, next) {
-  var status = database.createUser(req.body);
-  console.log(status);
+router.post('/api/createaccount', async function(req, res, next) {
+  var status = await database.createUser(req.body);
   res.send(status);
   //if success, send true
   //if failed, send error
