@@ -73,9 +73,24 @@ client.createEvent = function(data, user) {
   });
 }
 
-client.getEvents = function(user, location, handler) {
-  console.log("getEvents: " + user);
-  handler(user);
+client.getEvents = async function(user, location, handler) {
+  var status = {};
+  status['message'] = "something's wrong; you should NOT be seeing this!";
+  var query = await Event.find({}, function(err,events) {
+    if (err) {
+      status['success'] = false;
+      status['message'] = "weird error";
+    }
+    if (events) {
+      status['success'] = true;
+      status['message'] = "Found something?";
+      status['data'] = events;
+    } else {
+      status['success'] = false;
+      status['message'] = "Couldn't find any events";
+    }
+  }).exec();
+  return status;
 }
 
 module.exports = client;
