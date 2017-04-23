@@ -7,22 +7,25 @@ var client = {}
 
 client.user = User;
 
-client.create = function(data, model, name, handler) {
+client.create = async function(data, model, name, handler) {
+  var status = {"success":false};
   var doc = model(data);
-  handler(doc);//run the extra sht
+  await handler(doc);//run the extra sht
   var error = doc.validateSync();
   if (error) {
     console.log("ERROR VALIDATING "+name+": "+doc._id);
-    return error;
+    status.message = error;
+    return status;
   }
-  doc.save(function(err) {
+  await doc.save(function(err) {
     if (err) {
       console.log("Couln't save "+err);
-      return false;
+      status.message = err;
+      return status;
     };
     console.log("Successfully created "+name+": "+doc._id);
   });
-  return true;
+  return {"success":true,"message":JSON.stringify(doc)};
 }
 
 client.validateUser = function(user) {
@@ -31,23 +34,22 @@ client.validateUser = function(user) {
 
 client.createUser = async function(data) {
   var status = { };
-  var query = await User.find({'email':data.email}, function(err,user) {
+  var query = await User.find({'email':data.email}, async (err,user) => {
     if (err) {
       status['success'] = false;
       status['message'] = "weird error when checking to see if user already exists";
     }
-    if (user) {
+    if (user && user.length>0) {
       status['success'] = false;
       status['message'] = "User with email "+data.email+" already exists";
     } else {
-      status['success'] = this.create(data, User, "user", function(doc) {
+      status = await this.create(data, User, "user", function(doc) {
         doc.encrypted = false;
         doc.creation_date = new Date();
       });
-      if (status.success) status['message'] = "Created user with email: "+data.email;
-      if (!status.success) status['message'] = "Failed to create user";
     }
   }).exec();
+  console.log("Status: "+JSON.stringify(status));
   return status;
 }
 
