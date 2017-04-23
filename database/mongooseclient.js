@@ -33,23 +33,23 @@ client.validateUser = function(user) {
 }
 
 client.createUser = async function(data) {
-  var status = { };
-  var query = await User.find({'email':data.email}, async (err,user) => {
-    if (err) {
-      status['success'] = false;
-      status['message'] = "weird error when checking to see if user already exists";
-    }
-    if (user && user.length>0) {
-      status['success'] = false;
-      status['message'] = "User with email "+data.email+" already exists";
-    } else {
-      status = await this.create(data, User, "user", function(doc) {
-        doc.encrypted = false;
-        doc.creation_date = new Date();
-      });
-    }
-  }).exec();
-  console.log("Status: "+JSON.stringify(status));
+  let status = { };
+  let query = {};
+  try {
+    query = await User.find({'email':data.email}).exec();
+  } catch(err) {
+    status['success'] = false;
+    status['message'] = "error from awaited query";
+  }
+  if (query && query.length>0) {
+    status['success'] = false;
+    status['message'] = "User with email "+data.email+" already exists";
+  } else {
+    status = await this.create(data, User, "user", function(doc) {
+      doc.encrypted = false;
+      doc.creation_date = new Date();
+    });
+  }
   return status;
 }
 
