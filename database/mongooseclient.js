@@ -76,8 +76,7 @@ client.createEvent = function(data, user) {
 }
 
 client.getEvents = async function(user, location, handler) {
-  var status = {};
-  status['message'] = "something's wrong; you should NOT be seeing this!";
+  var status = {"message":"something's wrong; you should NOT be seeing this!"};
   var query = await Event.find({}, function(err,events) {
     if (err) {
       status['success'] = false;

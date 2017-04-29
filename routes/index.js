@@ -21,6 +21,11 @@ router.post('/api/nearby', function(req, res, next) {
   res.send('stub nearby eventslist\n');
 });
 
+router.post('/api/daddies/tojson', function(req, res, next) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(req.body);
+});
+
 router.post('/api/createaccount', async function(req, res, next) {
   var status = await database.createUser(req.body);
   res.send(status);
