@@ -68,11 +68,12 @@ client.findUserForLogin = function(data, handler) {
   });
 }
 
-client.createEvent = function(data, user) {
-  return this.create(data, Event, "event", (doc) => {
+client.createEvent = async function(data, user) {
+  let status = await this.create(data, Event, "event", (doc) => {
     doc.creator = this.validateUser(user);
     doc.creation_date = new Date();
   });
+  return status;
 }
 
 client.getEvents = async function(user, location, handler) {

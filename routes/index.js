@@ -39,9 +39,9 @@ router.post('/api/login', function(req, res, next) {
   });
 });
 
-router.post('/api/createEvent', function(req, res, next) {
+router.post('/api/createEvent', async function(req, res, next) {
   if (req.body.event && req.body.user) {
-    res.send(database.createEvent(req.body.event, req.body.user));
+    res.send(await database.createEvent(req.body.event, req.body.user));
   } else {
     res.send(400);
   }
