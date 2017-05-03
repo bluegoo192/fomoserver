@@ -30,7 +30,11 @@ router.post('/api/createaccount', async function(req, res, next) {
 
 router.post('/api/login', function(req, res, next) {
   database.findUserForLogin(req.body, function(user) {
-    res.send(user);
+    if (user.length === 0) {
+      res.send(401);
+    } else {
+      res.send(user);
+    }
   });
 });
 
